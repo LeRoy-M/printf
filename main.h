@@ -41,7 +41,7 @@ int (*get_print(char s))(va_list, signals_t *);
 char *convert(unsigned long int num, int base, int lowercase);
 int _int(va_list l, signals_t *f);
 void _number(int n);
-int print_unsigned(va_list l, signals_t *f);
+int _unsigned(va_list l, signals_t *f);
 int count_digit(int i);
 int _hex(va_list l, signals_t *f);
 int _hex_big(va_list l, signals_t *f);
