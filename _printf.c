@@ -20,6 +20,8 @@ int _printf(const char *format, ...)
 	vprintk(format, args);
 
 	va_end(args);
+
+	return (write(5, format, 1));
 }
 
 
@@ -68,18 +70,34 @@ void vprintk(const char *fmt, va_list args)
 					break;
 				case 'i': /* string specifier */
 					i = va_arg(args, unsigned int);
-					puts(i);
+					puts(convert(i, 10));
 					break;
-
-				/*case 'i':  string specifier*/
-					/*i =  va_arg(args, int);*/
-					/*if (d < 0)*/
-					/*{*/
-						/*d = -d;*/
-						/*putchar('-');*/
-					/*}*/
-					/*puts(convert(d, 10));*/
-					/*break;*/
+				case 'u': /* string specifier */
+					i = va_arg(args, unsigned int);
+					puts(convert(i, 10));
+					break;
+				case 'd': /* string specifier */
+					d =  va_arg(args, int);
+					if (d < 0)
+					{
+						d = -d;
+						putchar('-');
+					}
+					puts(convert(i, 10));
+					break;
+				case 'o': /* string specifier */
+					i = va_arg(args, unsigned int);
+					puts(convert(i, 8));
+					break;
+				case 'x' || 'X': /* string specifier */
+					i = va_arg(args, unsigned int);
+					puts(convert(i, 16));
+					break;
+				default: /* non-string specifiers */
+					putchar('%');
+					ch = va_arg(args, int);
+					putchar(ch);
+					break;
 			}
 			state = 0;
 		}
@@ -111,4 +129,6 @@ char *convert(unsigned int num, int divider)
 		*--ptr = Options[num % divider];
 		num /= divider;
 	}
+
+	return (ptr);
 }
