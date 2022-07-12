@@ -1,7 +1,7 @@
 #include "main.h"
 
 /**
- * print_string - loops through a string and prints
+ * _string - loops through a string and prints
  * every character
  * @l: va_list arguments from _printf
  * @f: pointer to the struct flags that determines
@@ -20,7 +20,7 @@ int _string(va_list l, signals_t *f)
 }
 
 /**
- * print_char - prints a character
+ * _char - prints a character
  * @l: va_list arguments from _printf
  * @f: pointer to the struct flags that determines
  * if a flag is passed to _printf
