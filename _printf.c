@@ -1,134 +1,47 @@
 #include "main.h"
 
-void vprintk(const char *fmt, va_list args);
-char *convert(unsigned int num, int divider);
-
 /**
- * _printf - printing function
- *
- * @format: format string
- * @...: variable number of arguments
- *
- * Return: number of characters printed
+ * _printf - produces output according to a format
+ * @format: format string containing the characters and the specifiers
+ * Description: this function will call the get_print() function that will
+ * determine which printing function to call depending on the conversion
+ * specifiers contained into fmt
+ * Return: length of the formatted output string
  */
 int _printf(const char *format, ...)
 {
-	va_list args;
+	int (*pfunc)(va_list, flags_t *);
+	const char *p;
+	va_list arguments;
+	flags_t flags = {0, 0, 0};
 
-	va_start(args, format);
+	register int count = 0;
 
-	vprintk(format, args);
-
-	va_end(args);
-
-	return (write(5, format, 1));
-}
-
-
-/**
- * vprintk - Called from _printf
- *
- * @fmt: Pointer
- * @args: Arguments
- *
- * state - state of the printf function whether it has met a % or not
- * state = 0: no % has been met
- * state = 1: % has been met
- *
- * Return: void
- */
-
-void vprintk(const char *fmt, va_list args)
-{
-	int state, d;
-	char ch;
-	char *s;
-	unsigned int i;
-
-	state = 0;
-
-	while (*fmt)
+	va_start(arguments, format);
+	if (!format || (format[0] == '%' && !format[1]))
+		return (-1);
+	if (format[0] == '%' && format[1] == ' ' && !format[2])
+		return (-1);
+	for (p = format; *p; p++)
 	{
-		if (state == 0)
+		if (*p == '%')
 		{
-			if (*fmt == '%')
-				state = 1;
-			else
-				putchar(*fmt);
-		}
-		else if (state == 1)
-		{
-			switch (*fmt)
+			p++;
+			if (*p == '%')
 			{
-				case 'c':/* character specifier */
-					ch = va_arg(args, int);
-					putchar(ch);
-					break;
-				case 's': /* string specifier */
-					s = va_arg(args, char *);
-					puts(s);
-					break;
-				case 'i': /* string specifier */
-					i = va_arg(args, unsigned int);
-					puts(convert(i, 10));
-					break;
-				case 'u': /* string specifier */
-					i = va_arg(args, unsigned int);
-					puts(convert(i, 10));
-					break;
-				case 'd': /* string specifier */
-					d =  va_arg(args, int);
-					if (d < 0)
-					{
-						d = -d;
-						putchar('-');
-					}
-					puts(convert(i, 10));
-					break;
-				case 'o': /* string specifier */
-					i = va_arg(args, unsigned int);
-					puts(convert(i, 8));
-					break;
-				case 'x' || 'X': /* string specifier */
-					i = va_arg(args, unsigned int);
-					puts(convert(i, 16));
-					break;
-				default: /* non-string specifiers */
-					putchar('%');
-					ch = va_arg(args, int);
-					putchar(ch);
-					break;
+				count += _putchar('%');
+				continue;
 			}
-			state = 0;
-		}
-		fmt++;
+			while (get_flag(*p, &flags))
+				p++;
+			pfunc = get_print(*p);
+			count += (pfunc)
+				? pfunc(arguments, &flags)
+				: _printf("%%%c", *p);
+		} else
+			count += _putchar(*p);
 	}
-}
-
-/**
- * convert - Into respective base system
- *
- * @num: Integer from calling function
- * @divider: Converts to respective base system
- *
- * Return: number of characters printed
- */
-
-char *convert(unsigned int num, int divider)
-{
-	char Options[] = "0123456789ABCDEF";
-	char buffer[50];
-	char *ptr;
-	int i;
-
-	ptr = &buffer[49];
-	*ptr = '\0';
-
-	while (num != 0)
-	{
-		*--ptr = Options[num % divider];
-		num /= divider;
-	}
-
-	return (ptr);
+	_putchar(-1);
+	va_end(arguments);
+	return (count);
 }
