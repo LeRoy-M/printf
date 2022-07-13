@@ -1,0 +1,20 @@
+# man _printf
+.TH _PRINTF
+
+.SH NAME
+.B _printf
+- format and print data
+
+.SH SYNOPSIS
+.B _printf
+
+.SH DESCRIPTION
+The _printf command is used to output formatted text to the stdout. It can handle all alphanumeric characters, including special characters. It does so by taking a varied number of arguments, and then formatting them according to the data type it is. Formats it can handle include strings (%s), characters (%c), signed and unsigned integers (%i or %d), octal (%o), hexadecimal (%x or %X), and a few others.
+
+.SH SEE ALSO
+.BR printf (1)
+
+.SH AUTHORS
+Jamal Salat and LeRoy Mzughula & Co.
+
+
