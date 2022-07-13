@@ -1,4 +1,7 @@
 #include "main.h"
+#include <stdarg.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 /**
  * _printf - produces output according to a format
@@ -10,10 +13,10 @@
  */
 int _printf(const char *format, ...)
 {
-	int (*ptr)(va_list, signals_t *);
+	int (*pfunc)(va_list, flags_t *);
 	const char *p;
 	va_list arguments;
-	signals_t signals = {0, 0, 0};
+	flags_t flags = {0, 0, 0};
 
 	register int count = 0;
 
@@ -29,19 +32,19 @@ int _printf(const char *format, ...)
 			p++;
 			if (*p == '%')
 			{
-				count += putchar('%');
+				count += _putchar('%');
 				continue;
 			}
-			while (get_signal(*p, &signals))
+			while (get_flag(*p, &flags))
 				p++;
-			ptr = get_print(*p);
-			count += (ptr)
-				? ptr(arguments, &signals)
+			pfunc = get_print(*p);
+			count += (pfunc)
+				? pfunc(arguments, &flags)
 				: _printf("%%%c", *p);
 		} else
-			count += putchar(*p);
+			count += _putchar(*p);
 	}
-	putchar(-1);
+	_putchar(-1);
 	va_end(arguments);
 	return (count);
 }

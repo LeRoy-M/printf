@@ -1,63 +1,63 @@
 #include "main.h"
 
 /**
- * _int - prints an integer
+ * print_int - prints an integer
  * @l: va_list of arguments from _printf
  * @f: pointer to the struct flags determining
  * if a flag is passed to _printf
  * Return: number of char printed
  */
-int _int(va_list l, signals_t *f)
+int print_int(va_list l, flags_t *f)
 {
 	int n = va_arg(l, int);
 	int res = count_digit(n);
 
 	if (f->space == 1 && f->plus == 0 && n >= 0)
-		res += putchar(' ');
+		res += _putchar(' ');
 	if (f->plus == 1 && n >= 0)
-		res += putchar('+');
+		res += _putchar('+');
 	if (n <= 0)
 		res++;
-	_number(n);
+	print_number(n);
 	return (res);
 }
 
 /**
- * _unsigned - prints an unsigned integer
+ * print_unsigned - prints an unsigned integer
  * @l: va_list of arguments from _printf
  * @f: pointer to the struct flags determining
  * if a flag is passed to _printf
  * Return: number of char printed
  */
-int _unsigned(va_list l, signals_t *f)
+int print_unsigned(va_list l, flags_t *f)
 {
 	unsigned int u = va_arg(l, unsigned int);
 	char *str = convert(u, 10, 0);
 
 	(void)f;
-	return (puts(str));
+	return (_puts(str));
 }
 
 /**
- * _number - helper function that loops through
+ * print_number - helper function that loops through
  * an integer and prints all its digits
  * @n: integer to be printed
  */
-void _number(int n)
+void print_number(int n)
 {
 	unsigned int n1;
 
 	if (n < 0)
 	{
-		putchar('-');
+		_putchar('-');
 		n1 = -n;
 	}
 	else
 		n1 = n;
 
 	if (n1 / 10)
-		_number(n1 / 10);
-	putchar((n1 % 10) + '0');
+		print_number(n1 / 10);
+	_putchar((n1 % 10) + '0');
 }
 
 /**
